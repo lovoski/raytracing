@@ -8,12 +8,17 @@
 
 // Common headers
 #include "ray.hpp"
+#include "interval.hpp"
 #include <Eigen/Core>
 
 using std::shared_ptr;
 using std::make_shared;
 using std::sqrt;
+using vec2 = Eigen::Vector2d;
 using vec3 = Eigen::Vector3d;
+using vec4 = Eigen::Vector4d;
+using mat3 = Eigen::Matrix3d;
+using mat4 = Eigen::Matrix4d;
 
 const double pi = 3.1415926535;
 const double infinity = std::numeric_limits<double>::infinity();
