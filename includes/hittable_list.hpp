@@ -16,12 +16,12 @@ public:
     objects.clear();
   }
 
-  bool hit(ray &r, double r_tmin, double r_tmax, hit_record &rec) const override {
+  bool hit(ray &r, interval r_interval, hit_record &rec) const override {
     hit_record m_rec;
     bool hit_something = false;
-    double closest_t = r_tmax;
+    double closest_t = r_interval.max;
     for (auto &&object : objects) {
-      if (object->hit(r, r_tmin, closest_t, m_rec)) {
+      if (object->hit(r, interval(r_interval.min, closest_t), m_rec)) {
         hit_something = true;
         closest_t = m_rec.t;
         rec = m_rec;

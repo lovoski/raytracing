@@ -15,6 +15,9 @@
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 
+#include <SFML/System.hpp>
+#include <SFML/Graphics.hpp>
+
 using std::shared_ptr;
 using std::make_shared;
 using std::sqrt;
