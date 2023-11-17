@@ -1,0 +1,15 @@
+# IDE configurations
+.vscode/
+.idea/
+
+# binaries
+build/
+*.exe
+*.pdb
+*.lib
+*.dll
+*.so
+*.a
+
+# ImGui settings
+imgui.ini
