@@ -5,11 +5,15 @@
 #include <limits>
 #include <memory>
 #include <vector>
+#include <fstream>
+#include <iostream>
 
 // Common headers
 #include "ray.hpp"
 #include "interval.hpp"
 #include <Eigen/Core>
+#include <Eigen/Dense>
+#include <Eigen/Sparse>
 
 using std::shared_ptr;
 using std::make_shared;
