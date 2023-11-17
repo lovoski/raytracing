@@ -9,14 +9,8 @@ find_package(ImGui-SFML CONFIG REQUIRED)
 find_package(Eigen3 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
-include_directories(
-  ${CMAKE_SOURCE_DIR}/includes)
-
-add_executable(window_test src/window_test.cpp)
-
-target_link_libraries(
-  window_test
-  PRIVATE
+set(
+  LIBS
   sfml-system
   sfml-network
   sfml-graphics
@@ -24,3 +18,19 @@ target_link_libraries(
   Eigen3::Eigen
   imgui::imgui
   ImGui-SFML::ImGui-SFML)
+
+include_directories(
+  ${CMAKE_SOURCE_DIR}/includes)
+
+add_executable(window_test src/window_test.cpp)
+add_executable(oneweekend src/oneweekend.cpp)
+
+target_link_libraries(
+  window_test
+  PRIVATE
+  ${LIBS})
+
+target_link_libraries(
+  oneweekend
+  PRIVATE
+  ${LIBS})
