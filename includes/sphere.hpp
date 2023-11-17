@@ -1,33 +1,40 @@
 #ifndef SPHERE_HPP
 #define SPHERE_HPP
 
-#include <Eigen/Core>
+#include "global.hpp"
+#include "hittable.hpp"
 
-#include "ray.hpp"
-
-class sphere {
+class sphere : public hittable {
 public:
   double radius;
-  Eigen::Vector3d o;
+  vec3 o;
 
-  sphere(const double _r, const Eigen::Vector3d _o)
+  sphere(const double _r, const vec3 _o)
   : radius(_r), o(_o) {}
   ~sphere() {}
 
-  double sdf(Eigen::Vector3d p) {
+  double sdf(vec3 p) {
     return (p-o).norm();
   }
-  double hit(ray r) {
+  bool hit(ray &r, double r_tmin, double r_tmax, hit_record &rec) const {
     double a = r.d.dot(r.d);
-    double b = 2*r.d.dot(r.o-o);
+    double half_b = r.d.dot(r.o-o);
     double c = (r.o-o).dot(r.o-o)-radius*radius;
-    double discriminant = b*b-4*a*c;
+    double discriminant = half_b*half_b-a*c;
+    double sqrt_d = sqrt(discriminant);
     if (discriminant < 0.0)
-      return 0.0;
+      return false;
     // returns the first hit point
-    if ((r.at((-b-sqrt(discriminant))/(2.0*a))-o).dot(r.d) < 0.0) {
-      return (-b-sqrt(discriminant))/(2.0*a);
-    } else return (-b+sqrt(discriminant))/(2.0*a);
+    double root = (-half_b-sqrt_d)/a;
+    if (root<=r_tmin || root>=r_tmax) {
+      root = (-half_b+sqrt_d)/a;
+      if (root<=r_tmin || root>=r_tmax)
+        return false;
+    }
+    rec.t = root;
+    rec.p = r.at(rec.t);
+    rec.set_face_normal(r, (rec.p-o).normalized());
+    return true;
   }
 };
 
