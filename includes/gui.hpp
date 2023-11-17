@@ -10,6 +10,34 @@
 #include <imgui.h>
 #include <imgui-SFML.h>
 
+// Display framebuffer as fixed sized image, ESC to exit, S to save as "image.png"
+void display_image(sf::Image framebuffer) {
+  const unsigned int width = framebuffer.getSize().x;
+  const unsigned int height = framebuffer.getSize().y;
+  sf::RenderWindow window(sf::VideoMode(width, height), "framebuffer viewer", sf::Style::Close | sf::Style::Titlebar);
+  sf::Texture texture;
+  texture.loadFromImage(framebuffer);
+  sf::Sprite sprite(texture);
+  window.clear();
+  window.draw(sprite);
+  window.display();
+  while (window.isOpen()) {
+    sf::Event event;
+    while (window.pollEvent(event)) {
+      if (event.type == sf::Event::Closed) window.close();
+      if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::Escape)
+          window.close();
+        else if (event.key.code == sf::Keyboard::S) {
+          framebuffer.saveToFile("image.png");
+          std::cout << "current rendering saved as \"image.png\"" << std::endl;
+        }
+        else;
+      }
+    }
+  }
+}
+
 class gui {
 private:
   std::function<void(sf::Event &event)> 
@@ -58,33 +86,6 @@ public:
       window->draw(sprite);
       ImGui::SFML::Render(*window);
       window->display();
-    }
-  }
-  // Display only one rendered image, ESC to exit, S to save as "image.png"
-  void display_image(std::function<void(sf::Image&, unsigned int, unsigned int)> render_func) {
-    bool frame_rendered = false;
-    framebuffer.create(width, height, sf::Color::Black);
-    render_func(framebuffer, width, height);
-    sf::Texture texture;
-    texture.loadFromImage(framebuffer);
-    sf::Sprite sprite(texture);
-    window->clear();
-    window->draw(sprite);
-    window->display();
-    while (window->isOpen()) {
-      sf::Event event;
-      while (window->pollEvent(event)) {
-        if (event.type == sf::Event::Closed) window->close();
-        if (event.type == sf::Event::KeyPressed) {
-          if (event.key.code == sf::Keyboard::Escape)
-            window->close();
-          else if (event.key.code == sf::Keyboard::S) {
-            framebuffer.saveToFile("image.png");
-            std::cout << "current rendering saved as \"image.png\"" << std::endl;
-          }
-          else;
-        }
-      }
     }
   }
   void set_event_handler(std::function<void(sf::Event &event)> event_handler) {

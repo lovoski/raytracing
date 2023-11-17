@@ -7,6 +7,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <cstdlib>
 
 // Common headers
 #include "ray.hpp"
@@ -31,5 +32,7 @@ const double pi = 3.1415926535;
 const double infinity = std::numeric_limits<double>::infinity();
 
 constexpr double deg2rad(double deg) {return pi*deg/180.0;}
+double rand_double() {return rand()/(RAND_MAX+1.0);}
+double rand_double(double min, double max) {return min+(max-min)*rand_double();}
 
 #endif
