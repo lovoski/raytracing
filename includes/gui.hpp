@@ -71,8 +71,6 @@ public:
         }
         m_event_handler(event);
       }
-      // clear framebuffer
-      framebuffer.create(width, height, sf::Color::Black);
       // get delta time
       dt = m_clock.restart();
       // update imgui

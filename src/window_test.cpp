@@ -18,6 +18,7 @@ int main() {
 
   // update framebuffer and imgui
   render_window.render_loop([&](sf::Image &framebuffer, unsigned int width, unsigned int height, float dt) {
+    framebuffer.create(width, height, sf::Color::Black);
     ImGui::Begin("settings");
     ImGui::SliderInt("start_x", &start_x, 0, end_x, "start_x=%d");
     ImGui::SliderInt("end_x", &end_x, start_x, SCREEN_WIDTH, "end_x=%d");
