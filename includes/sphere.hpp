@@ -37,7 +37,7 @@ public:
     rec.t = root;
     rec.p = r.at(rec.t);
     rec.mat = mat;
-    rec.set_face_normal(r, (rec.p-o).normalized());
+    rec.set_face_normal(r, (rec.p-o)/radius);
     return true;
   }
 };

@@ -75,7 +75,19 @@ sf::Color format_color(vec3 &color) {
     static_cast<sf::Uint8>(intensity.clamp(color.z())*255)
   );
 }
+
 vec3 reflect(vec3 &v, vec3 &n) {return v-2*v.dot(n)*n;}
+
+// v -> view direction
+// n -> normal
+// r -> eta_{from} / eta_{to}
+vec3 refract(vec3 &v, vec3 &n, double r) {
+  double cos_theta = std::min((-v).dot(n), 1.0);
+  vec3 R_perpendicular = r*(v+cos_theta*n);
+  vec3 R_parallel = -sqrt(abs(1.0-R_perpendicular.norm()*R_perpendicular.norm()))*n;
+  return R_perpendicular+R_parallel;
+}
+
 vec3 cartesian(vec3 v, vec3 u) {return vec3(v.x()*u.x(), v.y()*u.y(), v.z()*u.z());}
 
 #endif
