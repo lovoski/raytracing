@@ -16,7 +16,7 @@ int main() {
   world.add(make_shared<sphere>(sphere(100.0, vec3(0.0, -101, -1.0))));
 
   // camera
-  camera cam(SCREEN_WIDTH, SCREEN_HEIGHT, deg2rad(90.0), vec3(0.0, 0.0, 0.0));
+  camera cam(SCREEN_WIDTH, SCREEN_HEIGHT, deg2rad(90.0));
 
   display_image(cam.render(world));
   return 0;

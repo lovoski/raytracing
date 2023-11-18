@@ -13,8 +13,13 @@ public:
   interval(double _min, double _max) : min(_min), max(_max) {}
   ~interval() {}
 
-  bool in(double x) {return x>=min && x<=max;}
-  bool out(double x) {return x<min || x>max;}
+  bool in(double x) const {return x>=min && x<=max;}
+  bool out(double x) const {return x<min || x>max;}
+  double clamp(double x) const {
+    if (x < min) return min;
+    if (x > max) return max;
+    return x;
+  }
 };
 
 #endif
