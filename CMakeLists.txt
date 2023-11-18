@@ -19,16 +19,15 @@ set(
   imgui::imgui
   ImGui-SFML::ImGui-SFML)
 
+option(BUILD_TESTS "Build test code." ON)
+if (${BUILD_TESTS})
+  add_subdirectory(${CMAKE_SOURCE_DIR}/src/tests)
+endif()
+
 include_directories(
   ${CMAKE_SOURCE_DIR}/includes)
 
-add_executable(window_test src/window_test.cpp)
 add_executable(oneweekend src/oneweekend.cpp)
-
-target_link_libraries(
-  window_test
-  PRIVATE
-  ${LIBS})
 
 target_link_libraries(
   oneweekend

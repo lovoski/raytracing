@@ -12,8 +12,8 @@ const unsigned int SCREEN_HEIGHT = 600;
 int main() {
   // objects
   hittable_list world;
-  world.add(make_shared<sphere>(sphere(1.0, vec3(0.0, 0.0, -2.0))));
-  world.add(make_shared<sphere>(sphere(100.0, vec3(0.0, -101, -1.0))));
+  world.add(make_shared<sphere>(sphere(0.5, vec3(0.0, 0.0, -1.0))));
+  world.add(make_shared<sphere>(sphere(100.0, vec3(0.0, -100.5, -1.0))));
 
   // camera
   camera cam(SCREEN_WIDTH, SCREEN_HEIGHT, deg2rad(90.0));
