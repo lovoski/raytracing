@@ -17,6 +17,9 @@ struct hit_record {
 class hittable {
 public:
   virtual ~hittable() = default;
+  // One important reason for setting up the r_interval is to
+  // avoid the reflected ray from intersection the hit plane
+  // at a very little t (0.001)
   virtual bool hit(ray &r, interval r_interval, hit_record &rec) const = 0;
 };
 
