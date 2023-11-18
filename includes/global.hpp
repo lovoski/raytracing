@@ -29,6 +29,7 @@ using vec4 = Eigen::Vector4d;
 using mat3 = Eigen::Matrix3d;
 using mat4 = Eigen::Matrix4d;
 
+const double eps = 0.00001;
 const double pi = 3.1415926535;
 const double infinity = std::numeric_limits<double>::infinity();
 
@@ -46,19 +47,35 @@ double rand_double(double min, double max) {
   std::uniform_real_distribution<double> dist(min, max);
   return dist(rand_generator());
 }
-vec3 random_in_sphere(){
+vec3 rand_vec3_on_unit_sphere(){
   vec3 p;
   static std::default_random_engine generator{std::random_device{}()};
   std::uniform_real_distribution<float> distribution(0.0, 1.0);
   do {
     p = 2.0*vec3(distribution(generator),distribution(generator),distribution(generator)) - vec3(1,1,1);
   } while (p.norm() >= 1.0);
-  return p;
+  return p.normalized();
 }
 vec3 rand_vec3_on_hemisphere(vec3 &normal) {
-  vec3 ret = random_in_sphere().normalized();
+  vec3 ret = rand_vec3_on_unit_sphere();
   if (ret.dot(normal) > 0) return ret;
   else return -ret;
 }
+// gamma correction
+inline double linear2gamma(double linear) {return sqrt(linear);}
+// from [0, 1] to [0, 255]
+sf::Color format_color(vec3 &color) {
+  static const interval intensity(0.0, 1.0);
+  color(0) = linear2gamma(color(0));
+  color(1) = linear2gamma(color(1));
+  color(2) = linear2gamma(color(2));
+  return sf::Color(
+    static_cast<sf::Uint8>(intensity.clamp(color.x())*255),
+    static_cast<sf::Uint8>(intensity.clamp(color.y())*255),
+    static_cast<sf::Uint8>(intensity.clamp(color.z())*255)
+  );
+}
+vec3 reflect(vec3 &v, vec3 &n) {return v-2*v.dot(n)*n;}
+vec3 cartesian(vec3 v, vec3 u) {return vec3(v.x()*u.x(), v.y()*u.y(), v.z()*u.z());}
 
 #endif

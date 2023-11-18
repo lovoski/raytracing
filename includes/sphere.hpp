@@ -4,13 +4,16 @@
 #include "global.hpp"
 #include "hittable.hpp"
 
-class sphere : public hittable {
-public:
-  double radius;
-  vec3 o;
+class material;
 
-  sphere(const double _r, const vec3 _o)
-  : radius(_r), o(_o) {}
+class sphere : public hittable {
+private:
+  vec3 o;
+  double radius;
+  shared_ptr<material> mat;
+public:
+  sphere(const double _r, const vec3 _o, shared_ptr<material> _mat)
+  : radius(_r), o(_o), mat(_mat) {}
   ~sphere() {}
 
   double sdf(vec3 p) {
@@ -33,6 +36,7 @@ public:
     }
     rec.t = root;
     rec.p = r.at(rec.t);
+    rec.mat = mat;
     rec.set_face_normal(r, (rec.p-o).normalized());
     return true;
   }

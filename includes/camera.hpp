@@ -4,19 +4,9 @@
 #include "global.hpp"
 #include "hittable.hpp"
 #include "hittable_list.hpp"
+#include "material.hpp"
 
 class camera {
-private:
-  // from [0, 1] to [0, 255]
-  sf::Color format_color(vec3 &color) {
-    static const interval intensity(0.0, 1.0);
-    return sf::Color(
-      static_cast<sf::Uint8>(intensity.clamp(color.x())*255),
-      static_cast<sf::Uint8>(intensity.clamp(color.y())*255),
-      static_cast<sf::Uint8>(intensity.clamp(color.z())*255)
-    );
-  }
-
 public:
   double fov; // fov of y-axis
   unsigned int width;
@@ -38,8 +28,11 @@ public:
     if (depth <= 0) return vec3(0, 0, 0);
     hit_record rec;
     if (world.hit(r, interval(r_tmin, r_tmax), rec)) {
-      vec3 dir = rand_vec3_on_hemisphere(rec.normal).normalized();
-      return 0.5*ray_trace(ray(rec.p, dir), world, depth-1);
+      ray scattered;
+      vec3 attenuation;
+      if (rec.mat->scatter(r, rec, attenuation, scattered))
+        return cartesian(attenuation, ray_trace(scattered, world, depth-1).transpose());
+      else return vec3(0, 0, 0);
     }
     double a = 0.7*(r.d.y()+1.0);
     return (1.0-a)*vec3(1.0, 1.0, 1.0)+a*vec3(0.5, 0.7, 1.0);
@@ -51,14 +44,14 @@ public:
     double viewplane_z = -0.5*height/std::tan(fov/2.0);
     for (int x = 0; x < width; ++x) {
       for (int y = 0; y < height; ++y) {
-        // for each pixel
         vec3 pixel_color(0.0, 0.0, 0.0);
-        // apply msaa
+        // super sampleing
         for (int k = 0; k < samples_per_pixel; ++k) {
           vec3 pixel_pos(x-width/2.0+rand_double(), height/2.0-y-rand_double(), viewplane_z);
           ray r(cam_pos, (pixel_pos-cam_pos).normalized());
           pixel_color += ray_trace(r, world, max_depth);
         }
+        // averaging the results
         pixel_color /= samples_per_pixel;
         framebuffer.setPixel(x, y, format_color(pixel_color));
       }

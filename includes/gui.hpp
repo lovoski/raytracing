@@ -6,11 +6,13 @@
 
 #include <functional>
 #include <iostream>
+#include <string>
+#include <chrono>
 
 #include <imgui.h>
 #include <imgui-SFML.h>
 
-// Display framebuffer as fixed sized image, ESC to exit, S to save as "image.png"
+// Display framebuffer as fixed sized image, ESC to exit, S to save as "xxx.png"
 void display_image(sf::Image framebuffer) {
   const unsigned int width = framebuffer.getSize().x;
   const unsigned int height = framebuffer.getSize().y;
@@ -29,8 +31,11 @@ void display_image(sf::Image framebuffer) {
         if (event.key.code == sf::Keyboard::Escape)
           window.close();
         else if (event.key.code == sf::Keyboard::S) {
-          framebuffer.saveToFile("image.png");
-          std::cout << "current rendering saved as \"image.png\"" << std::endl;
+          auto cur_time = std::chrono::system_clock::now();
+          std::time_t cur_time_t = std::chrono::system_clock::to_time_t(cur_time);
+          std::string img_filename = std::to_string(cur_time_t)+".png";
+          framebuffer.saveToFile(img_filename);
+          std::cout << "current rendering saved as:" << img_filename << std::endl;
         }
         else;
       }
@@ -60,7 +65,7 @@ public:
     delete window;
   }
   // The render function takes four parameters, framebuffer, width, height and delta time as microseconds
-  void render_loop(std::function<void(sf::Image&, unsigned int, unsigned int, float)> render_func) {
+  void render_loop(std::function<void(sf::Image&, unsigned int, unsigned int, double)> render_func) {
     sf::Time dt;
     while (window->isOpen()) {
       sf::Event event;

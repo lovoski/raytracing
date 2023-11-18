@@ -3,11 +3,14 @@
 
 #include "global.hpp"
 
+class material;
+
 struct hit_record {
   double t;
   vec3 p;
   vec3 normal;
   bool front_face;
+  shared_ptr<material> mat;
   void set_face_normal(ray &r, vec3 n) {
     front_face = r.d.dot(n) < 0.0;
     normal = front_face ? n : -n;
