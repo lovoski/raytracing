@@ -7,20 +7,26 @@
 #include "material.hpp"
 
 class camera {
+private:
+  vec3 m_pos;
+  vec3 m_at;
+  vec3 m_vup;
+
+  vec3 viewport_u;
+  vec3 viewport_v;
+
 public:
-  double fov; // fov of y-axis
+  double vfov; // fov of y-axis
   unsigned int width;
   unsigned int height;
-  double aspect_ratio;
   int max_depth = 10;
   int samples_per_pixel = 10;
   double r_tmin = 0.001;
   double r_tmax = infinity;
-  vec3 cam_pos = vec3(0.0, 0.0, 0.0);
 
-  camera(unsigned int _w, unsigned int _h, double _fov)
-  : width(_w), height(_h), fov(_fov) {
-    aspect_ratio = _w/_h;
+  camera(unsigned int _w, unsigned int _h, double _vfov)
+  : width(_w), height(_h), vfov(_vfov) {
+    lookat(vec3(0, 0, 0), vec3(0, 0, -1), vec3(0, 1, 0));
   }
   ~camera() {}
 
@@ -38,17 +44,28 @@ public:
     return (1.0-a)*vec3(1.0, 1.0, 1.0)+a*vec3(0.5, 0.7, 1.0);
   }
 
+  void lookat(vec3 pos, vec3 at, vec3 up) {
+    m_pos = pos;
+    m_at = at;
+    m_vup = up.normalized();
+    double viewport_h = 2*(at-pos).norm()*std::tan(vfov/2.0);
+    double viewport_w = viewport_h*((double)width/(double)height);
+    viewport_u = (at-pos).cross(up).normalized()*viewport_w/width;
+    viewport_v = (-up).normalized()*viewport_h/height;
+  }
+
   sf::Image render(hittable_list &world) {
     sf::Image framebuffer;
     framebuffer.create(width, height, sf::Color::Black);
-    double viewplane_z = -0.5*height/std::tan(fov/2.0);
     for (int x = 0; x < width; ++x) {
       for (int y = 0; y < height; ++y) {
         vec3 pixel_color(0.0, 0.0, 0.0);
-        // super sampleing
         for (int k = 0; k < samples_per_pixel; ++k) {
-          vec3 pixel_pos(x-width/2.0+rand_double(), height/2.0-y-rand_double(), viewplane_z);
-          ray r(cam_pos, (pixel_pos-cam_pos).normalized());
+          vec3 pixel_pos(0, 0, 0);
+          pixel_pos += m_at;
+          pixel_pos += viewport_u*(x-width/2.0+rand_double());
+          pixel_pos += viewport_v*(y-height/2.0+rand_double());
+          ray r(m_pos, (pixel_pos-m_pos).normalized());
           pixel_color += ray_trace(r, world, max_depth);
         }
         // averaging the results

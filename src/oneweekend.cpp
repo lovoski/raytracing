@@ -26,10 +26,9 @@ int main() {
   world.add(make_shared<sphere>(sphere(0.5, vec3( 1.0, 0.0, -1.0), mat_right)));
 
   // camera
-  camera cam(SCREEN_WIDTH, SCREEN_HEIGHT, deg2rad(100.0));
+  camera cam(SCREEN_WIDTH, SCREEN_HEIGHT, deg2rad(90.0));
 
-  cam.samples_per_pixel = 30;
-  cam.max_depth = 30;
+  cam.lookat(vec3(0, 0, 0), vec3(0, 0, -1), vec3(1.0, 1.0, 0));
 
   // display rendering
   display_image(cam.render(world));
