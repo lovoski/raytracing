@@ -16,7 +16,7 @@ int main() {
     }
   });
 
-  auto render_func = [&](framebuffer &buffer, unsigned int width, unsigned int height, float dt) {
+  auto render_func = [&](framebuffer &buffer, unsigned int width, unsigned int height, double dt) {
     buffer.init(width, height);
     ImGui::Begin("settings");
     ImGui::SliderInt("start_x", &start_x, 0, end_x, "start_x=%d");
