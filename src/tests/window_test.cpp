@@ -28,7 +28,7 @@ int main() {
 
     for (int x = start_x; x < end_x; ++x) {
       for (int y = start_y; y < end_y; ++y) {
-        buffer.set_pixel(x, y, vec3(1.0, 1.0, 1.0));
+        buffer.set_pixel(x, y, Eigen::Vector3d(1.0, 1.0, 1.0));
       }
     }
   };

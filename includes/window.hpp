@@ -13,7 +13,7 @@
 #include <imgui.h>
 #include <imgui-SFML.h>
 
-#include "global.hpp"
+#include <Eigen/Core>
 
 class framebuffer {
   private:
@@ -40,7 +40,7 @@ class framebuffer {
     unsigned int get_height() {return height;}
     sf::Image& get_image() {return image;}
     void save_image(std::string filename) {image.saveToFile(filename);}
-    void set_pixel(unsigned int x, unsigned int y, vec3 &color) {
+    void set_pixel(unsigned int x, unsigned int y, Eigen::Vector3d &color) {
       image.setPixel(x, y, sf::Color(
         static_cast<sf::Uint8>(clamp(linear2gamma(color.x()))*255), 
         static_cast<sf::Uint8>(clamp(linear2gamma(color.y()))*255), 
