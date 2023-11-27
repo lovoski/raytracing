@@ -54,9 +54,9 @@ public:
     viewport_v = (-up).normalized()*viewport_h/height;
   }
 
-  sf::Image render(hittable_list &world) {
-    sf::Image framebuffer;
-    framebuffer.create(width, height, sf::Color::Black);
+  framebuffer render(hittable_list &world) {
+    framebuffer buffer;
+    buffer.init(width, height);
     for (int x = 0; x < width; ++x) {
       for (int y = 0; y < height; ++y) {
         vec3 pixel_color(0.0, 0.0, 0.0);
@@ -70,10 +70,10 @@ public:
         }
         // averaging the results
         pixel_color /= samples_per_pixel;
-        framebuffer.setPixel(x, y, format_color(pixel_color));
+        buffer.set_pixel(x, y, pixel_color);
       }
     }
-    return framebuffer;
+    return buffer;
   }
 };
 

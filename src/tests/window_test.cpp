@@ -1,24 +1,23 @@
-#include "gui.hpp"
+#include "window.hpp"
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 int start_x = 0, end_x = 10, start_y = 0, end_y = 10;
 
 int main() {
-  gui render_window(SCREEN_WIDTH, SCREEN_HEIGHT);
+  render_window window(SCREEN_WIDTH, SCREEN_HEIGHT);
 
   // event handler
-  render_window.set_event_handler([&](sf::Event &event) {
+  window.set_event_handler([&](sf::Event &event) {
     if (event.type == sf::Event::KeyPressed) {
       if (event.key.code == sf::Keyboard::Escape) {
-        render_window.window->close();
+        window.window->close();
       }
     }
   });
 
-  // update framebuffer and imgui
-  render_window.render_loop([&](sf::Image &framebuffer, unsigned int width, unsigned int height, float dt) {
-    framebuffer.create(width, height, sf::Color::Black);
+  auto render_func = [&](framebuffer &buffer, unsigned int width, unsigned int height, float dt) {
+    buffer.init(width, height);
     ImGui::Begin("settings");
     ImGui::SliderInt("start_x", &start_x, 0, end_x, "start_x=%d");
     ImGui::SliderInt("end_x", &end_x, start_x, SCREEN_WIDTH, "end_x=%d");
@@ -29,10 +28,13 @@ int main() {
 
     for (int x = start_x; x < end_x; ++x) {
       for (int y = start_y; y < end_y; ++y) {
-        framebuffer.setPixel(x, y, sf::Color(255.0f, 255.0f, 255.0f));
+        buffer.set_pixel(x, y, vec3(1.0, 1.0, 1.0));
       }
     }
-  });
+  };
+
+  // update framebuffer and imgui
+  window.render_loop(render_func);
 
   return 0;
 }

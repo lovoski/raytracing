@@ -61,20 +61,6 @@ vec3 rand_vec3_on_hemisphere(vec3 &normal) {
   if (ret.dot(normal) > 0) return ret;
   else return -ret;
 }
-// gamma correction
-inline double linear2gamma(double linear) {return sqrt(linear);}
-// from [0, 1] to [0, 255]
-sf::Color format_color(vec3 &color) {
-  static const interval intensity(0.0, 1.0);
-  color(0) = linear2gamma(color(0));
-  color(1) = linear2gamma(color(1));
-  color(2) = linear2gamma(color(2));
-  return sf::Color(
-    static_cast<sf::Uint8>(intensity.clamp(color.x())*255),
-    static_cast<sf::Uint8>(intensity.clamp(color.y())*255),
-    static_cast<sf::Uint8>(intensity.clamp(color.z())*255)
-  );
-}
 
 vec3 reflect(vec3 &v, vec3 &n) {return v-2*v.dot(n)*n;}
 

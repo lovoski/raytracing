@@ -14,7 +14,7 @@ To compile under other environments, modifications to the CMakeLists.txt is need
 
 ## Overview
 
-`includes/gui.hpp`: Simple wrappers for easy of display. For further usage, please refer to the source code `src/window_test.cpp`
+`includes/window.hpp`: Simple wrappers for easy of display. For further usage, please refer to the source code `src/window_test.cpp`
 
 ## References
 - [Games101](https://games-cn.org/intro-graphics/)
